@@ -136,6 +136,8 @@ class Cell {
         if (!cell.top && y > 0) {
             neighbors.push(grid[y - 1][x]);
         }
+
+        if (!cell.south && y < grid.length)
         // TODO: Tjek om naboen til venstre, hvis den findes, har en væg
         // TODO: Tjek om naboen syd for, hvis den findes, har en væg
         // TODO: Tjek om naboen til højre, hvis den findes, har en væg
