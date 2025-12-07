@@ -127,10 +127,15 @@ class Cell {
     }
 
     // Hjælpefunktion til MazeSolver: Finder de naboer som ikke har en væg
-    connectedNeighbors(grid) {
+    connectedNeighbors(grid, cell) {
         let neighbors = [];
+        const x = cell.x;
+        const y = cell.y;
 
         // TODO: Tjek om naboen nord for, hvis den findes, har en væg
+        if (!cell.top && y > 0) {
+            neighbors.push(grid[y - 1][x]);
+        }
         // TODO: Tjek om naboen til venstre, hvis den findes, har en væg
         // TODO: Tjek om naboen syd for, hvis den findes, har en væg
         // TODO: Tjek om naboen til højre, hvis den findes, har en væg
