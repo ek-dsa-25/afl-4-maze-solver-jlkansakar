@@ -282,10 +282,6 @@ class MazeSolver {
         this.endCell = endCell;
         //
 
-        console.log("startcelle", startCell.x, startCell.y);
-        console.log("endecelle", endCell.x, endCell.y);
-
-
         // TODO: Lav `findPath()` vha. enten DFS (stak) eller BFS (queue)
         const queue = [];
 
@@ -296,26 +292,21 @@ class MazeSolver {
 
         while (queue.length > 0) {
             const current = queue.shift();
-            console.log("visiting", current.x, current.y);
-
 
             if (current.equals(endCell)) {
-                console.log("endecelle", current);
-
                 return this.reconstructPath(startCell, endCell);
             }
 
-            const neighbors = current.connectedNeighbors(this.maze.grid)
+            const neighbors = current.connectedNeighbors(this.maze.grid);
 
             for (const neighbor of neighbors) {
                 if (!neighbor.visited) {
                     neighbor.visited = true;
                     neighbor.parent = current;
-                    queue.push(neighbor)
+                    queue.push(neighbor);
                 }
             }
         }
-        console.log("hejj");
 
         return null;
     }
@@ -344,13 +335,13 @@ class MazeSolver {
         if (!path) return;
 
         // farvegivning - delopgave 3
-        const startColor = { r: 255, g: 0, b: 0}; // Rød
-        const endColor = { r: 0, g: 255, b: 0}; // grøn
+        const startColor = { r: 255, g: 0, b: 0 }; // Rød
+        const endColor = { r: 0, g: 255, b: 0 }; // grøn
         const lastIndex = path.length - 1;
 
         for (let i = 0; i < path.length; i++) {
             const cell = path[i];
-            
+
             const t = i / lastIndex;
             const color = this.linIntColor(startColor, endColor, t);
             cell.drawPath(this.maze.ctx, this.maze.cellWidth, color);
@@ -371,12 +362,12 @@ class MazeSolver {
 
         return `rgb( ${r}, ${g}, ${b} )`;
     }
-
+    // firkant til start og slut celle - Delopgave 3
     drawStartEndMarkers() {
         const ctx = this.maze.ctx;
         const cellWidth = this.maze.cellWidth;
 
-        this.startCell.drawSquareMarker(ctx, cellWidth, "rgb(255, 0, 0)");
+        this.startCell.drawSquareMarker(ctx, cellWidth, "rgba(255, 0, 0, 1)");
 
         this.endCell.drawSquareMarker(ctx, cellWidth, "rgba(14, 94, 14, 1)");
     }
@@ -398,8 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const endY = maze.rows - 1;
 
     const path = solver.findPath(startX, startY, endX, endY);
-    console.log("Path", path);
-    console.log("Path length", path ? path.length : "null");
 
     solver.drawPathStepwise(path, '#ff0000', 20);
     solver.drawStartEndMarkers();
