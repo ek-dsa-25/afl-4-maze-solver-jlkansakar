@@ -135,7 +135,7 @@ class Cell {
         // TODO: Tjek om naboen nord for, hvis den findes, har en væg
         if (!this.walls.top && y > 0) {
             neighbors.push(grid[x][y - 1]);
-        } 
+        }
 
         // TODO: Tjek om naboen syd for, hvis den findes, har en væg
         if (!this.walls.bottom && y < grid.length) {
@@ -144,9 +144,9 @@ class Cell {
 
         // TODO: Tjek om naboen til venstre, hvis den findes, har en væg
         if (!this.walls.left && x > 0) {
-            neighbors.push(grid[x-1][y]);
+            neighbors.push(grid[x - 1][y]);
         }
-        
+
         // TODO: Tjek om naboen til højre, hvis den findes, har en væg
         if (!this.walls.right && x < grid[0].length - 1) {
             neighbors.push(grid[x + 1][y])
@@ -163,11 +163,25 @@ class Cell {
     // Hjælpefunktion til MazeSolver: Fremhæver cellen som en del af stien
     drawPath(ctx, cellWidth, color = '#ff0000') {
         // TODO: Personliggør denne funktion.
+
+        const centerX = this.x * cellWidth + cellWidth / 2;
+        const centerY = this.y * cellWidth + cellWidth / 2;
+        const radius = cellWidth * 0.3;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+
         ctx.fillStyle = color;
-        const px = this.x * cellWidth + cellWidth * 0.25;
-        const py = this.y * cellWidth + cellWidth * 0.25;
-        const size = cellWidth * 0.5;
-        ctx.fillRect(px, py, size, size);
+        ctx.globalAlpha = 0.7;
+        ctx.fill();
+
+        ctx.globalAlpha = 1;
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#ffffff";
+        ctx.stroke();
+
+        ctx.restore();
     }
 }
 
@@ -254,7 +268,7 @@ class MazeSolver {
 
         console.log("startcelle", startCell.x, startCell.y);
         console.log("endecelle", endCell.x, endCell.y);
-        
+
 
         // TODO: Lav `findPath()` vha. enten DFS (stak) eller BFS (queue)
         const queue = [];
@@ -267,11 +281,11 @@ class MazeSolver {
         while (queue.length > 0) {
             const current = queue.shift();
             console.log("visiting", current.x, current.y);
-            
+
 
             if (current.equals(endCell)) {
                 console.log("endecelle", current);
-                
+
                 return this.reconstructPath(startCell, endCell);
             }
 
@@ -286,7 +300,7 @@ class MazeSolver {
             }
         }
         console.log("hejj");
-        
+
         return null;
     }
 
@@ -313,14 +327,33 @@ class MazeSolver {
     async drawPathStepwise(path, color = '#ff0000', delay = 100) {
         if (!path) return;
 
-        for (const cell of path) {
+        // farvegivning - delopgave 3
+        const startColor = { r: 255, g: 0, b: 0}; // Rød
+        const endColor = { r: 0, g: 255, b: 0}; // grøn
+        const lastIndex = path.length - 1;
+
+        for (let i = 0; i < path.length; i++) {
+            const cell = path[i];
+            
+            const t = i / lastIndex;
+            const color = this.linIntColor(startColor, endColor, t);
             cell.drawPath(this.maze.ctx, this.maze.cellWidth, color);
+
             await this.sleep(delay);
         }
     }
 
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Linear Interpolation - Til delopgave 3
+    linIntColor(colorA, colorB, t) {
+        const r = colorA.r + (colorB.r - colorA.r) * t;
+        const g = colorA.g + (colorB.g - colorA.g) * t;
+        const b = colorA.b + (colorB.b - colorA.b) * t;
+
+        return `rgb( ${r}, ${g}, ${b} )`;
     }
 }
 
@@ -342,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const path = solver.findPath(startX, startY, endX, endY);
     console.log("Path", path);
     console.log("Path length", path ? path.length : "null");
-    
+
     solver.drawPathStepwise(path, '#ff0000', 20);
 
     console.log(maze);
