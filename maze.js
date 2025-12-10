@@ -183,6 +183,17 @@ class Cell {
 
         ctx.restore();
     }
+
+    // til delopgave 3
+    drawSquareMarker(ctx, cellWidth, color) {
+        const pixelX = this.x * cellWidth;
+        const pixelY = this.y * cellWidth;
+
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.9;
+        ctx.fillRect(pixelX + 2, pixelY + 2, cellWidth - 4, cellWidth - 4);
+    }
 }
 
 class Maze {
@@ -265,6 +276,11 @@ class MazeSolver {
 
         const startCell = this.maze.grid[startX][startY];
         const endCell = this.maze.grid[endX][endY];
+
+        // til personliggørelse - delopgave 3
+        this.startCell = startCell;
+        this.endCell = endCell;
+        //
 
         console.log("startcelle", startCell.x, startCell.y);
         console.log("endecelle", endCell.x, endCell.y);
@@ -355,6 +371,15 @@ class MazeSolver {
 
         return `rgb( ${r}, ${g}, ${b} )`;
     }
+
+    drawStartEndMarkers() {
+        const ctx = this.maze.ctx;
+        const cellWidth = this.maze.cellWidth;
+
+        this.startCell.drawSquareMarker(ctx, cellWidth, "rgb(255, 0, 0)");
+
+        this.endCell.drawSquareMarker(ctx, cellWidth, "rgba(14, 94, 14, 1)");
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -377,6 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Path length", path ? path.length : "null");
 
     solver.drawPathStepwise(path, '#ff0000', 20);
+    solver.drawStartEndMarkers();
 
     console.log(maze);
 })
