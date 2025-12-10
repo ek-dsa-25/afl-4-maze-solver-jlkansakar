@@ -134,13 +134,23 @@ class Cell {
 
         // TODO: Tjek om naboen nord for, hvis den findes, har en væg
         if (!cell.top && y > 0) {
-            neighbors.push(grid[y - 1][x]);
+            neighbors.push(grid[x][y - 1]);
+        } 
+
+        // TODO: Tjek om naboen syd for, hvis den findes, har en væg
+        if (!cell.bottom && y < grid.length) {
+            neighbors.push(grid[x][y + 1]);
         }
 
-        if (!cell.south && y < grid.length)
         // TODO: Tjek om naboen til venstre, hvis den findes, har en væg
-        // TODO: Tjek om naboen syd for, hvis den findes, har en væg
+        if (!cell.left && x > 0) {
+            neighbors.push(grid[x-1][y]);
+        }
+        
         // TODO: Tjek om naboen til højre, hvis den findes, har en væg
+        if (!cell.right && x < grid[0].length - 1) {
+            neighbors.push(grid[x + 1][y])
+        }
 
         return neighbors;
     }
